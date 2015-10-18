@@ -5,6 +5,9 @@
  */
 package whitworthian;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author ccolegrove17
@@ -35,6 +38,12 @@ public class Login extends javax.swing.JFrame {
         loginButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Login");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         loginTitleLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         loginTitleLabel.setText("Whitworthian Login");
@@ -104,12 +113,15 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-    String username = usernameField.getText();
-    String password = passwordField.getText();
-    //DO STUFF WITH LOGINS
-    if (true){//change later
-        new AddEditArticle().setVisible(true);
-    }
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        //DO STUFF WITH LOGINS
+        if (true) {//change later
+            dispose();
+            SearchPage.edit = true;
+            SearchPage.modeLabel.setText("Edit Mode");
+            SearchPage.logoutMenuItem.setVisible(true);
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_loginButtonActionPerformed
 
@@ -126,6 +138,10 @@ public class Login extends javax.swing.JFrame {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldKeyPressed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments

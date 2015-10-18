@@ -5,11 +5,16 @@
  */
 package whitworthian;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author ccolegrove17
  */
 public class SearchPage extends javax.swing.JFrame {
+
+    protected static boolean edit = false;
 
     /**
      * Creates new form Interface
@@ -33,12 +38,15 @@ public class SearchPage extends javax.swing.JFrame {
         resultList = new javax.swing.JList();
         searchButton = new javax.swing.JButton();
         searchLabel = new javax.swing.JLabel();
+        modeLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         employeeMenuItem = new javax.swing.JMenuItem();
+        logoutMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Search page");
         setMinimumSize(new java.awt.Dimension(465, 300));
 
         searchField.addActionListener(new java.awt.event.ActionListener() {
@@ -54,11 +62,20 @@ public class SearchPage extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        resultList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resultListMouseClicked(evt);
+            }
+        });
         resultsPage.setViewportView(resultList);
 
         searchButton.setText("Search");
 
         searchLabel.setText("Search Terms:");
+
+        modeLabel.setText("View Mode");
+
+        jMenuBar1.setToolTipText("");
 
         jMenu1.setText("File");
 
@@ -69,6 +86,14 @@ public class SearchPage extends javax.swing.JFrame {
             }
         });
         jMenu1.add(employeeMenuItem);
+
+        logoutMenuItem.setText("Logout");
+        logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(logoutMenuItem);
 
         jMenuBar1.add(jMenu1);
 
@@ -91,10 +116,15 @@ public class SearchPage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchButton)
                 .addGap(26, 26, 26))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(resultsPage)
-                .addGap(10, 10, 10))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(resultsPage)
+                        .addGap(10, 10, 10))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(modeLabel)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,8 +136,10 @@ public class SearchPage extends javax.swing.JFrame {
                     .addComponent(searchButton)
                     .addComponent(searchLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(resultsPage, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(resultsPage, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(modeLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -118,9 +150,51 @@ public class SearchPage extends javax.swing.JFrame {
     }//GEN-LAST:event_searchFieldActionPerformed
 
     private void employeeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeMenuItemActionPerformed
-        new Login().setVisible(true);
+        try {
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            Login choose = new Login();
+            choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+            choose.setVisible(true);
+        } catch (Exception ex) {
+            System.out.println("You're dumb" + ex.getMessage());
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_employeeMenuItemActionPerformed
+
+    private void resultListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultListMouseClicked
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+            evt.consume();
+            //handle double click event.
+
+            if (edit) {
+                try {
+                    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                    AddEditArticle choose = new AddEditArticle();
+                    choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+                    choose.setVisible(true);
+                } catch (Exception ex) {
+                    System.out.println("You're dumb" + ex.getMessage());
+                }
+            } else {
+                try {
+                    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                    ViewArticle choose = new ViewArticle();
+                    choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+                    choose.setVisible(true);
+                } catch (Exception ex) {
+                    System.out.println("You're dumb" + ex.getMessage());
+                }
+            }
+        }
+// TODO add your handling code here:
+    }//GEN-LAST:event_resultListMouseClicked
+
+    private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
+        edit = false;
+        logoutMenuItem.setVisible(false);
+        modeLabel.setText("View Mode");
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logoutMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,7 +227,17 @@ public class SearchPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SearchPage().setVisible(true);
+
+                try {
+                    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                    SearchPage choose = new SearchPage();
+                    choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+                    choose.setVisible(true);
+                    logoutMenuItem.setVisible(false);
+                } catch (Exception ex) {
+                    System.out.println("You're dumb" + ex.getMessage());
+                }
+
             }
         });
     }
@@ -163,6 +247,8 @@ public class SearchPage extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    protected static javax.swing.JMenuItem logoutMenuItem;
+    protected static javax.swing.JLabel modeLabel;
     private javax.swing.JList resultList;
     private javax.swing.JScrollPane resultsPage;
     private javax.swing.JButton searchButton;

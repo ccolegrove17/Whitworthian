@@ -48,6 +48,7 @@ public class AddEditArticle extends javax.swing.JFrame {
         submitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Add/Edit Article");
 
         authorLabel.setText("Author:");
 
