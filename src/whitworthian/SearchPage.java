@@ -29,10 +29,14 @@ public class SearchPage extends javax.swing.JFrame {
 
         searchField = new javax.swing.JTextField();
         searchByBox = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        resultsPage = new javax.swing.JScrollPane();
         resultList = new javax.swing.JList();
         searchButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        searchLabel = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        employeeMenuItem = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(465, 300));
@@ -50,11 +54,28 @@ public class SearchPage extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(resultList);
+        resultsPage.setViewportView(resultList);
 
         searchButton.setText("Search");
 
-        jLabel1.setText("Search Terms:");
+        searchLabel.setText("Search Terms:");
+
+        jMenu1.setText("File");
+
+        employeeMenuItem.setText("Employee Login");
+        employeeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                employeeMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(employeeMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -62,7 +83,7 @@ public class SearchPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(69, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(searchLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -72,7 +93,7 @@ public class SearchPage extends javax.swing.JFrame {
                 .addGap(26, 26, 26))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(resultsPage)
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
@@ -83,9 +104,9 @@ public class SearchPage extends javax.swing.JFrame {
                     .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchByBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton)
-                    .addComponent(jLabel1))
+                    .addComponent(searchLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addComponent(resultsPage, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -95,6 +116,11 @@ public class SearchPage extends javax.swing.JFrame {
     private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void employeeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeMenuItemActionPerformed
+        new Login().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_employeeMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -133,11 +159,15 @@ public class SearchPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem employeeMenuItem;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JList resultList;
+    private javax.swing.JScrollPane resultsPage;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox searchByBox;
     private javax.swing.JTextField searchField;
+    private javax.swing.JLabel searchLabel;
     // End of variables declaration//GEN-END:variables
 }
