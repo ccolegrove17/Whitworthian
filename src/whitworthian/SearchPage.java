@@ -7,6 +7,10 @@ package whitworthian;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 /**
  *
@@ -15,12 +19,17 @@ import java.awt.Toolkit;
 public class SearchPage extends javax.swing.JFrame {
 
     protected static boolean edit = false;
+    protected static DataSource dataSource;
 
     /**
      * Creates new form Interface
      */
-    public SearchPage() {
+    public SearchPage() throws NamingException {
         initComponents();
+        
+        //Context context = new InitialContext();
+        //dataSource = (DataSource) context.lookup("");
+        
     }
 
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Whitworthian.jnlp">
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Whitworthian_browser.jnlp">
   <information>
     <title>Whitworthian</title>
     <vendor>ccolegrove17</vendor>
@@ -8,9 +8,9 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Whitworthian.jar" size="31015" download="eager" />
+    <jar href="Whitworthian.jar" size="31105" download="eager" />
   </resources>
-  <application-desc main-class="whitworthian.SearchPage"  name="Whitworthian" >
-  </application-desc>
+  <applet-desc  width="800" height="600" main-class="whitworthian.SearchPage"  name="Whitworthian" >
+  </applet-desc>
   <update check="always"/>
 </jnlp>

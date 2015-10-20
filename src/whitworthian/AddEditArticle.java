@@ -5,17 +5,25 @@
  */
 package whitworthian;
 
+import java.io.File;
+import java.util.Vector;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author ccolegrove17
  */
 public class AddEditArticle extends javax.swing.JFrame {
 
+    
+    private final Vector<File> imageFiles = new Vector<File>();
+    private final DefaultListModel model = new DefaultListModel();
     /**
      * Creates new form ViewPage
      */
     public AddEditArticle() {
         initComponents();
+        imageList.setModel(model);
     }
 
     /**
@@ -27,6 +35,7 @@ public class AddEditArticle extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fileChooser = new javax.swing.JFileChooser();
         authorLabel = new javax.swing.JLabel();
         authorField = new javax.swing.JTextField();
         categoriesPane = new javax.swing.JScrollPane();
@@ -46,6 +55,8 @@ public class AddEditArticle extends javax.swing.JFrame {
         tagsLabel = new javax.swing.JLabel();
         tagsField = new javax.swing.JTextField();
         submitButton = new javax.swing.JButton();
+
+        fileChooser.setName("fileChooser"); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add/Edit Article");
@@ -82,6 +93,11 @@ public class AddEditArticle extends javax.swing.JFrame {
         contentLabel.setText("Content:");
 
         uploadButton.setText("Upload");
+        uploadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadButtonActionPerformed(evt);
+            }
+        });
 
         positionLabel.setText("Position:");
 
@@ -186,6 +202,15 @@ public class AddEditArticle extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dateFieldActionPerformed
 
+    private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
+        // TODO add your handling code here:
+        fileChooser.showOpenDialog(uploadButton);
+        File f = fileChooser.getSelectedFile();
+        imageFiles.add(f);
+        model.addElement(f.getName());
+        imageList.setModel(model);
+    }//GEN-LAST:event_uploadButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -235,6 +260,7 @@ public class AddEditArticle extends javax.swing.JFrame {
     private javax.swing.JTextArea contentTextArea;
     private javax.swing.JTextField dateField;
     private javax.swing.JLabel dateLabel;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JList imageList;
     private javax.swing.JLabel imagesLabel;
     private javax.swing.JScrollPane imagesPane;
@@ -245,4 +271,5 @@ public class AddEditArticle extends javax.swing.JFrame {
     private javax.swing.JLabel tagsLabel;
     private javax.swing.JButton uploadButton;
     // End of variables declaration//GEN-END:variables
+   
 }
