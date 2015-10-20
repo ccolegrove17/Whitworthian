@@ -7,16 +7,24 @@ package whitworthian;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /**
  *
  * @author ccolegrove17
  */
 public class SearchPage extends javax.swing.JFrame {
+    DatabaseConnection db = new DatabaseConnection();
+    
 
     protected static boolean edit = false;
     //protected static DataSource dataSource;
@@ -60,7 +68,7 @@ public class SearchPage extends javax.swing.JFrame {
             }
         });
 
-        searchByBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        searchByBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Keyword", "Title", "Author", "Date Published", "Tag", "Category" }));
 
         resultList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -75,6 +83,11 @@ public class SearchPage extends javax.swing.JFrame {
         resultsPage.setViewportView(resultList);
 
         searchButton.setText("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
 
         searchLabel.setText("Search Terms:");
 
@@ -200,6 +213,22 @@ public class SearchPage extends javax.swing.JFrame {
         modeLabel.setText("View Mode");
         // TODO add your handling code here:
     }//GEN-LAST:event_logoutMenuItemActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        DefaultListModel listModel = new DefaultListModel();
+        String searchBy = searchByBox.getSelectedItem().toString();
+        String searchBox = searchField.getText();
+        ResultSet rs = db.Search(searchBy, searchBox);
+        try {
+            while(rs.next() == true){
+                listModel.addElement(rs.getString(2));
+            }
+            resultList.setModel(listModel);
+            // TODO add your handling code here:
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_searchButtonActionPerformed
 
     /**
      * @param args the command line arguments
