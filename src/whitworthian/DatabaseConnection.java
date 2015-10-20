@@ -43,14 +43,32 @@ public class DatabaseConnection {
         }
     }
 
-    public void keywordSearch(String searchTerms) {
-
-    }
-
+    
     public ResultSet Search(String searchBy, String searchTerm) {
-        if (searchBy.equals("Date Published"))
-            searchBy = "Date_Pub";
-            
+        
+        String stSQL = "";
+        
+        switch(searchBy){
+            case "Date Published":
+                stSQL = formatQuery("Date_Pub", searchTerm);
+                break;
+            case "Title":
+                stSQL = formatQuery("Title", searchTerm);
+                break;
+            case "Keyword":
+                break;
+            case "Tag":
+                break;
+            case "Category":
+                break;
+            case "Author":
+                stSQL = formatQuery("Author", searchTerm);
+                break;
+        }
+        return executeQuery(stSQL);
+    }
+    
+    public String formatQuery(String searchBy, String searchTerm){
         String[] searchTerms = searchTerm.split(" ");
         searchTerm = "";
         for (int i = 0; i < searchTerms.length; i++) {
@@ -61,7 +79,17 @@ public class DatabaseConnection {
         }
         String stSQL = "";
         stSQL = "SELECT * FROM Articles WHERE " + searchBy + " LIKE " + searchTerm + ";";
-
-        return executeQuery(stSQL);
+        return stSQL;
     }
+    
+    public void keywordSearch(String searchTerms) {
+
+    }
+    
+    public void addWordsToDatabase(ResultSet results){
+        
+    }
+    
 }
+
+
