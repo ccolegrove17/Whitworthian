@@ -106,6 +106,11 @@ public class AddEditArticle extends javax.swing.JFrame {
         tagsLabel.setText("Tags:");
 
         submitButton.setText("Submit");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -210,6 +215,14 @@ public class AddEditArticle extends javax.swing.JFrame {
         model.addElement(f.getName());
         imageList.setModel(model);
     }//GEN-LAST:event_uploadButtonActionPerformed
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        //This will send an INSERT query to the database
+        String stSQL = "";
+        
+        //send stSQL to the database
+        dispose();
+    }//GEN-LAST:event_submitButtonActionPerformed
 
     /**
      * @param args the command line arguments

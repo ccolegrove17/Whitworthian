@@ -19,17 +19,13 @@ import javax.sql.DataSource;
 public class SearchPage extends javax.swing.JFrame {
 
     protected static boolean edit = false;
-    protected static DataSource dataSource;
+    //protected static DataSource dataSource;
 
     /**
      * Creates new form Interface
      */
     public SearchPage() throws NamingException {
-        initComponents();
-        
-        //Context context = new InitialContext();
-        //dataSource = (DataSource) context.lookup("");
-        
+        initComponents();   
     }
 
     /**
