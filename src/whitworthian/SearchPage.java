@@ -23,8 +23,10 @@ import javax.swing.JList;
  * @author ccolegrove17
  */
 public class SearchPage extends javax.swing.JFrame {
+
+    protected static ResultSet results;
+    protected static int index;
     DatabaseConnection db = new DatabaseConnection();
-    
 
     protected static boolean edit = false;
     //protected static DataSource dataSource;
@@ -33,7 +35,7 @@ public class SearchPage extends javax.swing.JFrame {
      * Creates new form Interface
      */
     public SearchPage() throws NamingException {
-        initComponents();   
+        initComponents();
     }
 
     /**
@@ -53,10 +55,13 @@ public class SearchPage extends javax.swing.JFrame {
         searchLabel = new javax.swing.JLabel();
         modeLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        fileMenu = new javax.swing.JMenu();
         employeeMenuItem = new javax.swing.JMenuItem();
         logoutMenuItem = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
+        addArticleMenuItem = new javax.swing.JMenuItem();
+        addAuthorMenuItem = new javax.swing.JMenuItem();
+        addPositionMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Search page");
@@ -67,14 +72,14 @@ public class SearchPage extends javax.swing.JFrame {
                 searchFieldActionPerformed(evt);
             }
         });
+        searchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                searchFieldKeyPressed(evt);
+            }
+        });
 
         searchByBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Keyword", "Title", "Author", "Date Published", "Tag", "Category" }));
 
-        resultList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         resultList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 resultListMouseClicked(evt);
@@ -95,7 +100,7 @@ public class SearchPage extends javax.swing.JFrame {
 
         jMenuBar1.setToolTipText("");
 
-        jMenu1.setText("File");
+        fileMenu.setText("File");
 
         employeeMenuItem.setText("Employee Login");
         employeeMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -103,7 +108,7 @@ public class SearchPage extends javax.swing.JFrame {
                 employeeMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(employeeMenuItem);
+        fileMenu.add(employeeMenuItem);
 
         logoutMenuItem.setText("Logout");
         logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -111,12 +116,37 @@ public class SearchPage extends javax.swing.JFrame {
                 logoutMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(logoutMenuItem);
+        fileMenu.add(logoutMenuItem);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(fileMenu);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        editMenu.setText("Edit");
+
+        addArticleMenuItem.setText("Add Article");
+        addArticleMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addArticleMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addArticleMenuItem);
+
+        addAuthorMenuItem.setText("Add Author");
+        addAuthorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAuthorMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addAuthorMenuItem);
+
+        addPositionMenuItem.setText("Add Position");
+        addPositionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPositionMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addPositionMenuItem);
+
+        jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -182,12 +212,14 @@ public class SearchPage extends javax.swing.JFrame {
     private void resultListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultListMouseClicked
         if (evt.getClickCount() == 2 && !evt.isConsumed()) {
             evt.consume();
+            index = resultList.getSelectedIndex() + 1;
             //handle double click event.
 
             if (edit) {
                 try {
                     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                     AddEditArticle choose = new AddEditArticle();
+                    choose.runWindow(results, index);
                     choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
                     choose.setVisible(true);
                 } catch (Exception ex) {
@@ -197,6 +229,7 @@ public class SearchPage extends javax.swing.JFrame {
                 try {
                     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                     ViewArticle choose = new ViewArticle();
+                    choose.runWindow(results, index);
                     choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
                     choose.setVisible(true);
                 } catch (Exception ex) {
@@ -210,6 +243,10 @@ public class SearchPage extends javax.swing.JFrame {
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         edit = false;
         logoutMenuItem.setVisible(false);
+        addAuthorMenuItem.setVisible(false);
+        addPositionMenuItem.setVisible(false);
+        editMenu.setVisible(false);
+
         modeLabel.setText("View Mode");
         // TODO add your handling code here:
     }//GEN-LAST:event_logoutMenuItemActionPerformed
@@ -218,9 +255,14 @@ public class SearchPage extends javax.swing.JFrame {
         DefaultListModel listModel = new DefaultListModel();
         String searchBy = searchByBox.getSelectedItem().toString();
         String searchBox = searchField.getText();
+        searchBox = searchBox.replaceAll("[^a-zA-z0-9 \'\"]+", "");
+        searchBox = searchBox.replace("\'","\\\'");
+        searchBox = searchBox.replace("\"","\\\"");
         ResultSet rs = db.Search(searchBy, searchBox);
+        System.out.println(searchBox);
+        results = rs;
         try {
-            while(rs.next() == true){
+            while (rs.next() == true) {
                 listModel.addElement(rs.getString(2));
             }
             resultList.setModel(listModel);
@@ -229,6 +271,43 @@ public class SearchPage extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void searchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) { //checks if the user presses enter in the text field
+            searchButton.doClick();//clicks the button
+        }    }//GEN-LAST:event_searchFieldKeyPressed
+
+    private void addAuthorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAuthorMenuItemActionPerformed
+        try {
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            AddAuthor choose = new AddAuthor();
+            choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+            choose.setVisible(true);
+        } catch (Exception ex) {
+            System.out.println("You're dumb" + ex.getMessage());
+        }
+    }//GEN-LAST:event_addAuthorMenuItemActionPerformed
+
+    private void addPositionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPositionMenuItemActionPerformed
+        try {
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            AddPosition choose = new AddPosition();
+            choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+            choose.setVisible(true);
+        } catch (Exception ex) {
+            System.out.println("You're dumb" + ex.getMessage());
+        }
+    }//GEN-LAST:event_addPositionMenuItemActionPerformed
+
+    private void addArticleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addArticleMenuItemActionPerformed
+        AddEditArticle choose = new AddEditArticle();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        choose.addNewArticle();
+        choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
+        choose.setVisible(true);
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addArticleMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -268,6 +347,9 @@ public class SearchPage extends javax.swing.JFrame {
                     choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
                     choose.setVisible(true);
                     logoutMenuItem.setVisible(false);
+                    addAuthorMenuItem.setVisible(false);
+                    addPositionMenuItem.setVisible(false);
+                    editMenu.setVisible(false);
                 } catch (Exception ex) {
                     System.out.println("You're dumb" + ex.getMessage());
                 }
@@ -277,15 +359,18 @@ public class SearchPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addArticleMenuItem;
+    protected static javax.swing.JMenuItem addAuthorMenuItem;
+    protected static javax.swing.JMenuItem addPositionMenuItem;
+    protected static javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem employeeMenuItem;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
+    private static javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     protected static javax.swing.JMenuItem logoutMenuItem;
     protected static javax.swing.JLabel modeLabel;
     private javax.swing.JList resultList;
     private javax.swing.JScrollPane resultsPage;
-    private javax.swing.JButton searchButton;
+    protected static javax.swing.JButton searchButton;
     private javax.swing.JComboBox searchByBox;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;

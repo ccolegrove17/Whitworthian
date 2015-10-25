@@ -121,6 +121,9 @@ public class Login extends javax.swing.JFrame {
             SearchPage.edit = true;
             SearchPage.modeLabel.setText("Edit Mode");
             SearchPage.logoutMenuItem.setVisible(true);
+            SearchPage.addAuthorMenuItem.setVisible(true);
+            SearchPage.addPositionMenuItem.setVisible(true);
+            SearchPage.editMenu.setVisible(true);
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_loginButtonActionPerformed
