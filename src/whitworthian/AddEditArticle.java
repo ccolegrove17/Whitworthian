@@ -243,6 +243,7 @@ public class AddEditArticle extends javax.swing.JFrame {
         //This will send an INSERT query to the database
         String title, date, content, fName, lName, authorPosition;
         int employee = 0;
+        int artID = -1;
         fName = fNameField.getText();
         lName = lNameField.getText();
         ResultSet rs = db.executeQuery("SELECT ID FROM Employees WHERE Fname LIKE \"%" + fName + "%\" AND Lname LIKE \"%" + lName + "%\";");
@@ -271,22 +272,77 @@ public class AddEditArticle extends javax.swing.JFrame {
             }
             stSQL = "INSERT INTO Articles (Title, Employee_ID, Date_Pub, Content, AuthorPosition) VALUES (\""
                     + title + "\",\"" + employee + "\",\"" + date + "\",\"" + content + "\", \"" + authorPosition + "\");";
-            db.executeUpdate(stSQL);
+            artID = db.executeUpdate(stSQL);
         } else if (submitButton.getText().equals("Edit")) {
             try {
                 stSQL = "UPDATE Articles SET Title = \"" + title + "\", Employee_ID = " + employee
                         + ", Date_Pub = \"" + date + "\", Content = \"" + content + "\", AuthorPosition = \"" + authorPosition + "\" WHERE ID = " + results.getString(1) + ";";
-                db.executeUpdate(stSQL);
+                artID = db.executeUpdate(stSQL);
                 SearchPage.searchButton.doClick();
             } catch (SQLException ex) {
                 Logger.getLogger(AddEditArticle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
+        if (artID != -1){
+            getWords("content", content, artID);
+            getWords("title", title, artID);
+            getWords("author", fName + " " + lName, artID);
+        }
         //send stSQL to the database
         dispose();
     }//GEN-LAST:event_submitButtonActionPerformed
 
+    
+    private static void getWords(String dataType, String text, int articleID){
+        String stSQL = "";
+        String wordID = "";
+        int tempWordID = -1;
+        String[] contWords;
+        
+            
+        // remove special characters
+        text = text.replaceAll("[^a-zA-Z \'\n]+", "");
+        text = text.replace("\n", " ");
+        text = text.replace("\'", "\\\'");
+
+        contWords = text.split(" "); // assuming there are not spaces in words
+
+        for (String contWord : contWords) {
+            stSQL = "INSERT INTO Words (word) VALUES(\"" + contWord + "\");";
+            tempWordID = db.executeUpdate(stSQL);
+
+            if (tempWordID == -1){
+                stSQL = "SELECT ID FROM words WHERE Word = \'" + contWord + "\';";
+                results = db.excuteQuery(stSQL);
+
+                try{
+                //System.out.println(results.getInt("ID"));
+                results.next();
+                wordID = Integer.toString(results.getInt(1));
+                }catch (Exception ex){
+                    System.out.println(ex.getMessage());
+                }
+
+                stSQL = "INSERT INTO " + dataType + "words (Article_ID, Word_ID)  VALUES(\"" + articleID + "\", \"" + wordID + "\");";
+                db.executeUpdate(stSQL);   
+            }
+            else{
+                try{
+                    if (articleID == -1)
+                        throw new Exception("Exploded");
+                    stSQL = "INSERT INTO " + dataType + "words (Article_ID, Word_ID)  VALUES(\"" + articleID + "\", \"" + wordID + "\");";
+                    db.executeUpdate(stSQL);
+                } catch (Exception ex){
+                    System.out.println(ex.getMessage() + "\n");
+                    //System.out.println(stSQL);
+                }
+            }//end else
+        }
+        
+    }
+    
+    
     private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_titleFieldActionPerformed

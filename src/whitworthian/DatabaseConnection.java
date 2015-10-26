@@ -125,4 +125,18 @@ public class DatabaseConnection {
         return stSQL;
 
     }
+
+    
+    // I don't know why we need this,
+    // but on line 324 of AddEditArticle, we would get an error if we didn't have it. 
+    ResultSet excuteQuery(String stSQL) {
+        try {
+            System.out.println(stSQL);
+            stmt = conn.prepareStatement(stSQL);
+            return stmt.executeQuery();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
 }
