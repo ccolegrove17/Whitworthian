@@ -159,6 +159,15 @@ public class DatabaseConnection {
                 + ") Q INNER JOIN Employees E ON Q.Employee_ID = E.ID UNION DISTINCT SELECT * FROM (SELECT A.* FROM ARTICLES A INNER JOIN (SELECT * FROM Words INNER JOIN titlewords ON Words.ID = titlewords.Word_ID WHERE Word = " + searchTerm + " group by Article_ID having count(*) = " + length + ") X ON A.ID = X.Article_ID) Q INNER JOIN Employees E ON Q.Employee_ID = E.ID";
         return stSQL;
     }
+    
+//POSSIBLE NEW QUERY FOR KEYWORD
+//SELECT *, ROUND((LENGTH(Y.content) - LENGTH(REPLACE(Y.content, 'Bodecker', '')))/8) as Length FROM Employees E,
+//(SELECT * FROM
+//(SELECT * FROM (SELECT A.* FROM ARTICLES A INNER JOIN (SELECT * FROM Words INNER JOIN contentwords ON Words.ID = contentwords.Word_ID WHERE Word = 'Bodecker' group by Article_ID having count(*) = 1) X ON A.ID = X.Article_ID) Q
+//UNION DISTINCT SELECT * FROM (SELECT A.* FROM ARTICLES A INNER JOIN (SELECT * FROM Words INNER JOIN authorwords ON Words.ID = authorwords.Word_ID WHERE Word = 'Bodecker' group by Article_ID having count(*) = 1) X ON A.ID = X.Article_ID) Q
+//UNION DISTINCT SELECT * FROM (SELECT A.* FROM ARTICLES A INNER JOIN (SELECT * FROM Words INNER JOIN titlewords ON Words.ID = titlewords.Word_ID WHERE Word = 'Bodecker' group by Article_ID having count(*) = 1) X ON A.ID = X.Article_ID) Q) Z INNER JOIN contentwords CW ON Z.ID = CW.Article_ID) Y INNER JOIN words W ON Y.Word_ID = W.ID WHERE W.Word = 'Bodecker' AND E.ID = Y.Employee_ID
+//GROUP BY Title
+//ORDER BY Length desc
 
     // I don't know why we need this,
 // but on line 324 of AddEditArticle, we would get an error if we didn't have it. 
