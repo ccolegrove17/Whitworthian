@@ -156,7 +156,12 @@ public class ViewArticle extends javax.swing.JFrame {
         try {
             results.absolute(index);
             titleLabel.setText("Title: " + results.getString(2));
-            authorLabel.setText("Author: "+ results.getString(8) + " " + results.getString(9));
+            authorLabel.setText("Author: " + results.getString(8) + " " + results.getString(9));
+            String position = results.getString(6);
+            if (position == null) {
+                position = "Unknown";
+            }
+            positionLabel.setText("Position: " + position);
             contentArea.append(results.getString(5));
             contentArea.setCaretPosition(0);
             dateLabel.setText("Date Published: " + results.getDate(4));
@@ -206,7 +211,7 @@ public class ViewArticle extends javax.swing.JFrame {
     private javax.swing.JLabel contentLabel;
     private static javax.swing.JLabel dateLabel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel positionLabel;
+    private static javax.swing.JLabel positionLabel;
     private javax.swing.JLabel tagsLabel;
     private javax.swing.JList tagsList;
     private javax.swing.JScrollPane tagsPane;

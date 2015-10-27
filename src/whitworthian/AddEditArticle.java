@@ -284,13 +284,14 @@ public class AddEditArticle extends javax.swing.JFrame {
             }
         }
 
+        //send stSQL to the database
+        dispose();
+        
         if (artID != -1){
             getWords("content", content, artID);
             getWords("title", title, artID);
             getWords("author", fName + " " + lName, artID);
         }
-        //send stSQL to the database
-        dispose();
     }//GEN-LAST:event_submitButtonActionPerformed
 
     
@@ -457,7 +458,7 @@ public class AddEditArticle extends javax.swing.JFrame {
     protected static javax.swing.JButton submitButton;
     private javax.swing.JTextField tagsField;
     private javax.swing.JLabel tagsLabel;
-    private static javax.swing.JTextField titleField;
+    protected static javax.swing.JTextField titleField;
     private javax.swing.JButton uploadButton;
     // End of variables declaration//GEN-END:variables
 
