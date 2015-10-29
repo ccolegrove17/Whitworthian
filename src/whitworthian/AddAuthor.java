@@ -139,7 +139,8 @@ public class AddAuthor extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
     
     //Gets all the text from the author fields
@@ -147,6 +148,13 @@ public class AddAuthor extends javax.swing.JFrame {
     String lName = lNameField.getText();
     String email = emailField.getText();
     String phone = phoneField.getText();
+    
+    // makes sure that no one can use the ";" character in the SQL
+    fName = fName.replaceAll(";", "");
+    lName = lName.replaceAll(";", "");
+    email = email.replaceAll(";", "");
+    phone = phone.replaceAll(";", "");
+    
     
     //Query to insert author information into the database
     String stSQL = "INSERT INTO Employees (Fname, Lname, Email, Phone_Number) VALUES (\"" + fName + "\",\"" + lName + "\",\"" + email + "\",\"" + phone + "\");"; 

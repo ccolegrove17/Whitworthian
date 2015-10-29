@@ -144,12 +144,17 @@ public class ViewArticle extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Disposes the frame when the OK button is pressed.
+     * @param evt 
+     */
     private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OkButtonActionPerformed
         dispose();
         // TODO add your handling code here:
     }//GEN-LAST:event_OkButtonActionPerformed
 
     /**
+     * Populates the jFrame with the article information
      * @param args the command line arguments
      */
     public static void runWindow(ResultSet results, int index) {

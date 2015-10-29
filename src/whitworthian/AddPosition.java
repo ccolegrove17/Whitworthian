@@ -95,6 +95,9 @@ public class AddPosition extends javax.swing.JFrame {
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         //insert a new position into the database
         String position = positionField.getText();
+        
+       position = position.replaceAll(";", "");
+        
         String stSQL = "INSERT INTO positions (Pos_Name) VALUES (\"" + position + "\");";
         //try{
         db.executeUpdate(stSQL);

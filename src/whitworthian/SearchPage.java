@@ -198,10 +198,16 @@ public class SearchPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_searchFieldActionPerformed
 
+    /**
+        This creates a new login window to prompt the user to login
+        @param evt
+        @return void
+    */
     private void employeeLoginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeLoginMenuItemActionPerformed
         try {
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             Login choose = new Login();
+            // chooses where to create the new window
             choose.setLocation(dim.width / 2 - choose.getSize().width / 2, dim.height / 2 - choose.getSize().height / 2);
             choose.setVisible(true);
         } catch (Exception ex) {
@@ -210,15 +216,27 @@ public class SearchPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_employeeLoginMenuItemActionPerformed
 
+    /**
+     * This opens a view frame for user to view the article
+     * @param evt
+     * @return void
+    */
     private void resultListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultListMouseClicked
         if (evt.getClickCount() == 2 && !evt.isConsumed()) {
             evt.consume();
             index = resultList.getSelectedIndex() + 1;
             //handle double click event.
-
+            
+            // checks to see if the user is add/edit or just viewing.
             if (edit) {
                 try {
 
+                    // creates an add/edit window for the user to edit or add the article
+                    // This creates a window in a new thread so that when we insert all the words into the words table,
+                    // the program will not hang and not be able to continue. 
+                    
+                    // Each time you instert all of the words into the words table, it takes about 30 seconds.
+                    // This 30 seconds of accessing the database is moved a new thread.
                     java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {
                             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -239,6 +257,7 @@ public class SearchPage extends javax.swing.JFrame {
                     System.out.println("You're dumb" + ex.getMessage());
                 }
             } else {
+                // open a view window for the article
                 try {
                     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                     ViewArticle choose = new ViewArticle();
@@ -253,6 +272,11 @@ public class SearchPage extends javax.swing.JFrame {
 // TODO add your handling code here:
     }//GEN-LAST:event_resultListMouseClicked
 
+    /**
+     * If the user is logged in, there is a logout option that is populated in the file menu
+     * Pressing this will log you out to where you will not be able to add/edit articles
+     * @param evt 
+     */
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         edit = false;
         logoutMenuItem.setVisible(false);
@@ -264,16 +288,24 @@ public class SearchPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_logoutMenuItemActionPerformed
 
+    /**
+     * This will execute a query that will search for the input words
+     * @param evt 
+     */
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         DefaultListModel listModel = new DefaultListModel();
         String searchBy = searchByBox.getSelectedItem().toString();
         String searchBox = searchField.getText();
+        
+        // cleans the input to defend agaisnt SQL injection
         searchBox = searchBox.replaceAll("[^a-zA-z0-9 \'\"]+", "");
         searchBox = searchBox.replace("\'", "\\\'");
         searchBox = searchBox.replace("\"", "\\\"");
         ResultSet rs = db.Search(searchBy, searchBox);
         System.out.println(searchBox);
         results = rs;
+        
+        // populates the jList with all of the search results
         try {
             while (rs.next() == true) {
                 listModel.addElement("  " + rs.getString(2));
@@ -285,11 +317,19 @@ public class SearchPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchButtonActionPerformed
 
+    /**
+     * Executes SearchButtonActionPerformed when the "Enter" key is pressed.
+     * @param evt 
+     */
     private void searchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) { //checks if the user presses enter in the text field
             searchButton.doClick();//clicks the button
         }    }//GEN-LAST:event_searchFieldKeyPressed
 
+    /**
+     * Allows the user to add an author and their contact information
+     * @param evt 
+     */
     private void addAuthorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAuthorMenuItemActionPerformed
         try {
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -301,6 +341,11 @@ public class SearchPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addAuthorMenuItemActionPerformed
 
+    /**
+     * Allows the user to add an employee position. This will then allow the add/edit article to 
+     * query through the position table and populate the position drop down menu.
+     * @param evt 
+     */
     private void addPositionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPositionMenuItemActionPerformed
         try {
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -312,6 +357,12 @@ public class SearchPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addPositionMenuItemActionPerformed
 
+    /**
+     * The will open a blank article form for the user to fill in. This is on a separate thread
+     * because of the time it takes to populate the database. We would like the user to continue
+     * to use the program for the 30 seconds it takes to populate the database with the new words. 
+     * @param evt 
+     */
     private void addArticleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addArticleMenuItemActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {

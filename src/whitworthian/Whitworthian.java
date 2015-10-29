@@ -30,6 +30,7 @@ public class Whitworthian extends JApplet {
     private static JFXPanel fxContainer;
 
     /**
+     * This is the main function of the whole project
      * @param args the command line arguments
      */
     public static void main(String[] args) {
