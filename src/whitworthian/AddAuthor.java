@@ -141,14 +141,18 @@ public class AddAuthor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+    
+    //Gets all the text from the author fields
     String fName = fNameField.getText();
     String lName = lNameField.getText();
     String email = emailField.getText();
     String phone = phoneField.getText();
+    
+    //Query to insert author information into the database
     String stSQL = "INSERT INTO Employees (Fname, Lname, Email, Phone_Number) VALUES (\"" + fName + "\",\"" + lName + "\",\"" + email + "\",\"" + phone + "\");"; 
-    db.executeUpdate(stSQL);
-    db.close();
-    dispose();
+    db.executeUpdate(stSQL); //Updates the Whitworthian database with the above SQL
+    db.close(); //Close the database
+    dispose(); //Close the window
         // TODO add your handling code here:
     }//GEN-LAST:event_submitButtonActionPerformed
 

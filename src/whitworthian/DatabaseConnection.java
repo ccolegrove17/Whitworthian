@@ -17,12 +17,18 @@ public class DatabaseConnection {
 
     public DatabaseConnection() {
         try {
+            //connect to the database using Craig's username and password
             conn = DriverManager.getConnection("jdbc:mysql://cs1/whitworthian", "ccolegrove", "whitworthian1");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
+    /**
+     * takes in the SQL and returns the results from the database
+     * @param stSQL
+     * @return ResultSet
+     */
     public ResultSet executeQuery(String stSQL) {
         try {
             System.out.println(stSQL);
@@ -34,6 +40,9 @@ public class DatabaseConnection {
         return null;
     }
 
+    /**
+     * Closes the database connection
+     */
     public void close() {
         try {
             conn.close();
@@ -42,9 +51,15 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Updates the database with the stSQL string given
+     * @param stSQL
+     * @return an integer representing the last inserted primary key
+     */
     public int executeUpdate(String stSQL) {
         System.out.println(stSQL);
         try {
+            //returns the key of the last inserted primary key
             PreparedStatement stmt = conn.prepareStatement(stSQL, Statement.RETURN_GENERATED_KEYS);
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -57,6 +72,12 @@ public class DatabaseConnection {
         return -1;
     }
 
+    /**
+     * Figures out what search is going on, and then formats the query accordingly
+     * @param searchBy
+     * @param searchTerm
+     * @return ResultSet of all items returned by the database
+     */
     public ResultSet Search(String searchBy, String searchTerm) {
         ResultSet results;
         String stSQL = "";
@@ -84,9 +105,8 @@ public class DatabaseConnection {
             if (searchBy.equals("Keyword") && !results.next()) {
                 stSQL = reformatKeyword("Keyword", searchTerm);
                 results = executeQuery(stSQL);
-
             }
-            results.absolute(0);
+            results.absolute(0);//repositions the cursor to the front of the ResultSet
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -150,7 +170,6 @@ public class DatabaseConnection {
             stSQL = "SELECT * FROM Articles A INNER JOIN Employees E ON A.Employee_ID = E.ID WHERE " + searchBy + " LIKE " + searchTerm + ";";
         }
         return stSQL;
-
     }
 
     public String formSQL(int length, String searchTerm) {

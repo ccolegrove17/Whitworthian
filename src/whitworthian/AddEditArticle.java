@@ -22,11 +22,11 @@ import javax.swing.DefaultListModel;
  * @author ccolegrove17
  */
 public class AddEditArticle extends javax.swing.JFrame {
-
-    static ResultSet results;
-    static DatabaseConnection db = new DatabaseConnection();
-    private final Vector<File> imageFiles = new Vector<File>();
-    private final DefaultListModel model = new DefaultListModel();
+    
+    static ResultSet results; //stores the results from the database
+    static DatabaseConnection db = new DatabaseConnection(); //Connect to the database
+    private final Vector<File> imageFiles = new Vector<File>(); //Where we were gonna store the images for the article
+    private final DefaultListModel model = new DefaultListModel(); //Populates the list of articles searched for
 
     /**
      * Creates new form ViewPage
@@ -231,7 +231,7 @@ public class AddEditArticle extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
-        // TODO add your handling code here:
+        //Where we were gonna upload the images
         fileChooser.showOpenDialog(uploadButton);
         File f = fileChooser.getSelectedFile();
         imageFiles.add(f);
@@ -246,18 +246,21 @@ public class AddEditArticle extends javax.swing.JFrame {
         int artID = -1;
         fName = fNameField.getText();
         lName = lNameField.getText();
+        
+        //Get the ID of the employee so we can link the article to the employee ID
         ResultSet rs = db.executeQuery("SELECT ID FROM Employees WHERE Fname LIKE \"%" + fName + "%\" AND Lname LIKE \"%" + lName + "%\";");
-        authorPosition = positionBox.getSelectedItem().toString();
+        authorPosition = positionBox.getSelectedItem().toString(); //Select the author's position
         String stSQL = "";
         title = titleField.getText();
         date = dateField.getText();
         content = contentArea.getText();
         try {
             if (rs.next() == true) {
-                employee = rs.getInt(1);
+                employee = rs.getInt(1); //get the employee ID from resultset
             } else {
+                //if the employee wasn't found, insert them into the database
                 stSQL = "INSERT INTO Employees (Fname, Lname) VALUES(\"" + fName + "\", \"" + lName + "\");";
-                employee = db.executeUpdate(stSQL);
+                employee = db.executeUpdate(stSQL); //update the employee table
             }
         } catch (SQLException ex) {
             Logger.getLogger(AddEditArticle.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,6 +268,7 @@ public class AddEditArticle extends javax.swing.JFrame {
 
         //FIGURE OUT HOW TO CHECK IF IT DIDN'T RETURN ANY RESULTS
         if (submitButton.getText().equals("Submit")) {
+            //insert a new article into the database
             try {
                 rs.next();
             } catch (Exception ex) {
@@ -274,19 +278,21 @@ public class AddEditArticle extends javax.swing.JFrame {
                     + title + "\",\"" + employee + "\",\"" + date + "\",\"" + content + "\", \"" + authorPosition + "\");";
             artID = db.executeUpdate(stSQL);
         } else if (submitButton.getText().equals("Edit")) {
+            //edit an existing article
             try {
                 stSQL = "UPDATE Articles SET Title = \"" + title + "\", Employee_ID = " + employee
                         + ", Date_Pub = \"" + date + "\", Content = \"" + content + "\", AuthorPosition = \"" + authorPosition + "\" WHERE ID = " + results.getString(1) + ";";
-                artID = db.executeUpdate(stSQL);
-                SearchPage.searchButton.doClick();
+                artID = db.executeUpdate(stSQL); //update the database
+                SearchPage.searchButton.doClick(); //update the list of articles searched for
             } catch (SQLException ex) {
                 Logger.getLogger(AddEditArticle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        //send stSQL to the database
+        //get rid of the window
         dispose();
         
+        //get all of the new words in the article and add them to the words table
         if (artID != -1){
             getWords("content", content, artID);
             getWords("title", title, artID);
@@ -309,6 +315,7 @@ public class AddEditArticle extends javax.swing.JFrame {
 
         contWords = text.split(" "); // assuming there are not spaces in words
 
+        //for every word, try inserting it into the words database
         for (String contWord : contWords) {
             stSQL = "INSERT INTO Words (word) VALUES(\"" + contWord + "\");";
             tempWordID = db.executeUpdate(stSQL);
